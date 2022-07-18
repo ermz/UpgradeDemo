@@ -8,5 +8,8 @@ compiler:
 # automatically fetch contract sources from Etherscan
 autofetch_sources: True
 dotenv: .env
+networks:
+  rinkeby:
+    verify: True
 wallets:
   from_key: ${PRIVATE_KEY}

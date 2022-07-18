@@ -17,7 +17,7 @@ def main():
         box.address,
         proxy_admin.address,
         box_encoded_initialized_function,
-        {"from": account, "gas_limit": 1000000},
+        {"from": account, "gas_limit": 1000000}
     )
 
     print(f"Proxy deployed to {proxy}, you can now upgrade to V2!")
@@ -25,8 +25,12 @@ def main():
     proxy_box.store(1, {"from": account})
     print(proxy_box.retrieve())
 
-    box_v2 = BoxV2.deploy({"from": account})
+    box_v2 = BoxV2.deploy({"from": account}, publish_source=True)
     upgrade_transaction = upgrade(
         account, proxy, box_v2.address, proxy_admin_contract=proxy_admin
     )
+    upgrade_transaction.wait(1)
     print("Proxy has been upgraded!!")
+    proxy_box = Contract.from_abi("BoxV2", proxy.address, BoxV2.abi)
+    proxy_box.increment({"from": account})
+    print(proxy_box.retrieve())
